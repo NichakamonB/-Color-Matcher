@@ -1,9 +1,3 @@
-# SQLite. Versions 3.8.0 and up are supported.
-#   gem install sqlite3
-#
-#   Ensure the SQLite 3 gem is defined in your Gemfile
-#   gem "sqlite3"
-#
 default: &default
   adapter: postgresql
   encoding: unicode
@@ -20,5 +14,9 @@ test:
 
 production:
   <<: *default
-  # Render จะให้ DATABASE_URL ผ่าน environment variable
-  database: myapp_production
+  database: color_matcher
+  username: color_matcher_user
+  password: <%= ENV["DB_PASSWORD"] %>
+  host: dpg-d4d2a3ripnbc739pot90-a.singapore-postgres.render.com
+  port: 5432
+  sslmode: require
