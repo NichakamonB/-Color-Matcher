@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Matcher</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body, html { margin:0; padding:0; height:100%; width:100%; overflow:hidden; }
+    .sidebar-btn { @apply w-full py-3 rounded-lg font-semibold cursor-pointer transition text-white; }
+    .btn-active { background:#1f2937 !important; }
+  </style>
+</head>
+<body class="bg-gray-200">
+
+<!-- Navbar -->
+<div class="w-full h-14 bg-gray-900 text-white fixed top-0 flex items-center justify-between px-5 z-20 shadow">
+  <div class="text-xl font-bold">🎨 Color Matcher</div>
+  <button class="bg-blue-500 px-4 py-2 rounded-lg font-bold">ลงชื่อเข้าใช้</button>
+</div>
+
+<!-- Main Layout -->
+<div class="flex w-full h-screen pt-14">
+
+  <!-- Color Display -->
+  <div id="colorDisplay" class="flex flex-row flex-wrap w-full h-full overflow-auto"></div>
+
+  <!-- Sidebar -->
+  <div class="w-64 bg-white h-full border-l shadow-xl p-4 flex flex-col gap-3">
+    <label class="font-bold text-lg">เลือกสี Base</label>
+    <input type="color" id="baseColor" value="<%= @base_color %>" class="w-full h-16 rounded cursor-pointer border">
+    <div id="hexText" class="text-center font-bold text-gray-800 text-lg"></div>
+    <hr class="my-2">
+    <button class="sidebar-btn bg-blue-500 type-btn" data-type="base">Base</button>
+    <button class="sidebar-btn bg-blue-500 type-btn" data-type="analogous">Analogous</button>
+    <button class="sidebar-btn bg-blue-500 type-btn" data-type="triadic">Triadic</button>
+    <button class="sidebar-btn bg-blue-500 type-btn" data-type="split">Split</button>
+    <button class="sidebar-btn bg-blue-500 type-btn" data-type="tints">Tints</button>
+    <button class="sidebar-btn bg-blue-500 type-btn" data-type="shades">Shades</button>
+  </div>
+</div>
+
+<%= javascript_include_tag "color_matcher", type: "module" %>
+</body>
+</html>
