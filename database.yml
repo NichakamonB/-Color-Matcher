@@ -6,11 +6,22 @@ default: &default
 development:
   <<: *default
   database: color_matcher_development
+  username: postgres
+  password: kwaniiz1
+  host: localhost
 
 test:
   <<: *default
   database: color_matcher_test
-
+  username: postgres
+  password: kwaniiz1
+  host: localhost
+  
 production:
   <<: *default
-  url: <%= ENV['DATABASE_URL'] %>
+  database: color_matcher
+  username: color_matcher_user
+  password: <%= ENV["DB_PASSWORD"] %>
+  host: dpg-d4d2a3ripnbc739pot90-a.singapore-postgres.render.com
+  port: 5432
+
