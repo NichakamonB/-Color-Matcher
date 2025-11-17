@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
   def index
-    @welcome_message = "Welcome to Color Matcher!"
+    # สามารถเพิ่มตัวแปรสำหรับ view ได้ เช่น @colors = Color.all
   end
 end

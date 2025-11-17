@@ -2,23 +2,10 @@
 <html>
 <head>
   <title>Color Matcher</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <%= csrf_meta_tags %>
-  <%= csp_meta_tag %>
-  <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
-  <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+  <meta charset="UTF-8">
 </head>
 <body>
-  <div class="container">
-    <h1><%= @welcome_message %></h1>
-    <p>This is your root page.</p>
-
-    <p>Try visiting other routes:</p>
-    <ul>
-      <li><%= link_to "Users", users_path %></li>
-      <li><%= link_to "Colors", colors_path %></li>
-      <li><%= link_to "Health Check", rails_health_check_path %></li>
-    </ul>
-  </div>
+  <h1>Welcome to Color Matcher!</h1>
+  <p>Your application is running successfully!</p>
 </body>
 </html>
