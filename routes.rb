@@ -1,14 +1,18 @@
 Rails.application.routes.draw do
-  # หน้า homepage
   root "home#index"
-  
-  # ตัวอย่าง resource (ถ้ามี)
+  get "home/index"
+
   resources :users, only: [:index, :show, :new, :create, :edit, :update]
   resources :colors, only: [:index, :show, :new, :create, :edit, :update]
 
-  # Health check
-  get "up" => "rails/health#show", as: :rails_health_check
+  namespace :admin do
+    resources :users
+    resources :colors
+    root "dashboard#index"
+  end
 
-  # Catch-all สำหรับ 404 (optional)
+  get "about" => "pages#about"
+  get "contact" => "pages#contact"
+
   match "*path", to: "application#not_found", via: :all
 end
