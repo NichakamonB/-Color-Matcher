@@ -2,16 +2,21 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  url: <%= ENV['DATABASE_URL'] %>
 
 development:
   <<: *default
-  database: myapp_development
+  database: color_matcher_development
+  username: postgres
+  password: JYUqf2yNmbxAYM1q1evqLKmstL2X0rGh
+  host: localhost
 
 test:
   <<: *default
-  database: myapp_test
-
+  database: color_matcher_test
+  username: postgres
+  password: JYUqf2yNmbxAYM1q1evqLKmstL2X0rGh
+  host: localhost
+  
 production:
   <<: *default
   database: color_matcher
@@ -20,3 +25,4 @@ production:
   host: dpg-d4d2a3ripnbc739pot90-a.singapore-postgres.render.com
   port: 5432
   sslmode: require
+

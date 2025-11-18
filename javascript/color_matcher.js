@@ -1,3 +1,4 @@
+
 /* ===================== Color Functions ===================== */
 function hexToRgb(hex){
   const n = parseInt(hex.replace("#",""),16);
@@ -88,3 +89,4 @@ document.addEventListener("DOMContentLoaded", ()=>{
   document.getElementById("hexText").textContent = picker.value.toUpperCase();
   renderAll();
 });
+
