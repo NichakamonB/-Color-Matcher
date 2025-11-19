@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 // config/tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -14,20 +14,4 @@ module.exports = {
   },
   plugins: [],
 }
-=======
-// config/tailwind.config.js
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [
-    './app/views/**/*.html.erb',
-    './app/helpers/**/*.rb',
-    './app/javascript/**/*.js',
-    './app/assets/stylesheets/**/*.css',
-    './app/assets/tailwind/**/*.css'  // ถ้ามีไฟล์ CSS Tailwind
-  ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-}
->>>>>>> dccb6bd (Save local changes before pull)
+
