@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   root "home#index"
   get "home/index"
 
@@ -15,4 +16,5 @@ Rails.application.routes.draw do
   get "contact" => "pages#contact"
 
   match "*path", to: "application#not_found", via: :all
+
 end
