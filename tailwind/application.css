@@ -3,4 +3,4 @@
 @tailwind utilities;
 
 /* ถ้ามีไฟล์ colors.css หรือ colors.scss ก็สามารถ import ได้ */
-@import "colors";
+@import "../stylesheets/colors.css";
