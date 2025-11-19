@@ -1,3 +1,11 @@
+<<<<<<< HEAD
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+=======
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "../stylesheets/colors.css"; /* หรือ colors.scss ถ้าใช้ SCSS */
+>>>>>>> dccb6bd (Save local changes before pull)
