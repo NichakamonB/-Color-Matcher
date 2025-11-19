@@ -1,11 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Color Matcher</title>
-  <meta charset="UTF-8">
-</head>
-<body>
-  <h1>Welcome to Color Matcher!</h1>
-  <p>Your application is running successfully!</p>
-</body>
-</html>
+<div class="container">
+  <h1>Color Matching Tool</h1>
+
+  <div class="color-grid">
+    <% @colors.each do |color| %>
+      <div>
+        <div class="color-box" style="background-color: <%= color.hex %>;"></div>
+        <div class="color-label"><%= color.name %></div>
+      </div>
+    <% end %>
+  </div>
+</div>

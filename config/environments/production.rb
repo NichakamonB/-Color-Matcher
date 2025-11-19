@@ -86,4 +86,10 @@ Rails.application.configure do
   #
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+  # Serve static assets (จำเป็นมากบน Render)
+config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present? || ENV['RENDER'].present?
+
+# ปิด runtime compile เพื่อความเร็ว + ป้องกัน error
+config.assets.compile = false
+
 end
