@@ -1,0 +1,6 @@
+  [1m[36mActiveRecord::SchemaMigration Load (45.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='App'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (35.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='App'*/[0m
+  [1m[35m (35.2ms)[0m  [1m[34mSELECT pg_try_advisory_lock(1196062929792122490) /*application='App'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (41.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='App'*/[0m
+  [1m[35m (38.3ms)[0m  [1m[34mSELECT pg_advisory_unlock(1196062929792122490) /*application='App'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (177.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='App'*/[0m
