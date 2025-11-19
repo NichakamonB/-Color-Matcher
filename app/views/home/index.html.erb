@@ -7,7 +7,6 @@
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
-  /* Reset และ box-sizing */
   *, *::before, *::after { box-sizing: border-box; }
 
   body, html {
@@ -27,7 +26,30 @@
     background:#1f2937 !important;
   }
 
-  /* Scrollbar สำหรับ colorDisplay */
+  /* สีของกล่อง color */
+  .color-box {
+    flex: 1 1 120px;
+    height: 200px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+
+  /* แถบแสดง hex code */
+  .color-label {
+    width: 100%;
+    text-align: center;
+    background: rgba(0,0,0,0.4);
+    padding: 0.25rem;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+  }
+
+  /* scrollbar */
   #colorDisplay {
     overflow-y: auto;
   }
@@ -141,9 +163,9 @@ function renderAll(){
     if(activeTypes[type]){
       currentColors[type].forEach(c=>{
         const box = document.createElement("div");
-        box.className = "flex-1 min-w-[120px] h-48 flex items-end justify-center text-white font-bold rounded shadow";
+        box.className = "color-box";
         box.style.background = c;
-        box.innerHTML = `<div class="w-full text-center bg-black/40 py-1 rounded-b">${c}</div>`;
+        box.innerHTML = `<div class="color-label">${c}</div>`;
         display.appendChild(box);
       });
     }
