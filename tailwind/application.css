@@ -2,5 +2,4 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ถ้ามีไฟล์ colors.css หรือ colors.scss ก็สามารถ import ได้ */
-@import "../stylesheets/colors.css";
+@import "../stylesheets/colors.css"; /* หรือ colors.scss ถ้าใช้ SCSS */
