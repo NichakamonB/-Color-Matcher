@@ -5,82 +5,97 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Color Matcher</title>
 <script src="https://cdn.tailwindcss.com"></script>
-
 <style>
-  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin:0; padding:0; height:100%; width:100%; font-family:sans-serif; }
+  *, *::before, *::after { box-sizing:border-box; }
 
-  body, html {
-    margin:0;
-    padding:0;
-    height:100%;
-    width:100%;
-    overflow:hidden;
-    font-family: sans-serif;
+  /* Navbar */
+  .navbar { 
+    height:56px; 
+    width:100%; 
+    position:fixed; 
+    top:0; 
+    left:0; 
+    display:flex; 
+    justify-content:space-between; 
+    align-items:center; 
+    padding:0 16px; 
+    background:#1f2937; 
+    color:white; 
+    z-index:50; 
+  }
+  .btn-login { background:#3b82f6; padding:8px 16px; border-radius:8px; font-weight:bold; }
+
+  /* Layout */
+  .main { display:flex; height:100vh; padding-top:56px; }
+
+  #colorDisplay { 
+    flex:1; 
+    display:flex; 
+    flex-wrap:wrap; 
+    gap:8px; 
+    padding:8px; 
+    overflow-y:auto; 
+    background:#e5e7eb;
+  }
+
+  .sidebar {
+    width:260px;
+    background:white;
+    padding:16px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    border-left:1px solid #d1d5db;
+    overflow-y:auto;
   }
 
   .sidebar-btn {
     @apply w-full py-3 rounded-lg font-semibold cursor-pointer transition text-white;
   }
+  .btn-active { background:#1f2937 !important; }
 
-  .btn-active {
-    background:#1f2937 !important;
-  }
-
-  /* สีของกล่อง color */
+  /* Color boxes */
   .color-box {
-    flex: 1 1 120px;
-    height: 200px;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-    border-radius: 0.5rem;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    flex:1 1 120px;
+    height:200px;
+    display:flex; 
+    align-items:flex-end; 
+    justify-content:center;
+    color:white; 
+    font-weight:bold; 
+    border-radius:0.5rem; 
+    box-shadow:0 2px 6px rgba(0,0,0,0.2);
   }
-
-  /* แถบแสดง hex code */
   .color-label {
-    width: 100%;
-    text-align: center;
-    background: rgba(0,0,0,0.4);
-    padding: 0.25rem;
-    border-bottom-left-radius: 0.5rem;
-    border-bottom-right-radius: 0.5rem;
-  }
-
-  /* scrollbar */
-  #colorDisplay {
-    overflow-y: auto;
+    width:100%; 
+    text-align:center; 
+    background:rgba(0,0,0,0.4); 
+    padding:4px;
+    border-bottom-left-radius:0.5rem; 
+    border-bottom-right-radius:0.5rem;
   }
 </style>
 </head>
-
-<body class="bg-gray-200">
+<body>
 
 <!-- Navbar -->
-<div class="w-full h-14 bg-gray-900 text-white fixed top-0 flex items-center justify-between px-5 z-20 shadow">
+<div class="navbar">
   <div class="text-xl font-bold">🎨 Color Matcher</div>
-  <button class="bg-blue-500 px-4 py-2 rounded-lg font-bold">ลงชื่อเข้าใช้</button>
+  <button class="btn-login">ลงชื่อเข้าใช้</button>
 </div>
 
 <!-- Main Layout -->
-<div class="flex w-full h-screen pt-14">
-
+<div class="main">
   <!-- Color Display -->
-  <div id="colorDisplay" class="flex-1 flex flex-wrap p-4 gap-4"></div>
+  <div id="colorDisplay"></div>
 
   <!-- Sidebar -->
-  <div class="w-64 bg-white h-full border-l shadow-xl p-4 flex flex-col gap-3">
+  <div class="sidebar">
     <label class="font-bold text-lg">เลือกสี Base</label>
-
-    <input type="color" id="baseColor" value="#66d7d1" 
-           class="w-full h-16 rounded cursor-pointer border">
-
+    <input type="color" id="baseColor" value="#66d7d1" class="w-full h-16 rounded cursor-pointer border">
     <div id="hexText" class="text-center font-bold text-gray-800 text-lg"></div>
-
     <hr class="my-2">
-
     <button class="sidebar-btn bg-blue-500 type-btn" data-type="base">Base</button>
     <button class="sidebar-btn bg-blue-500 type-btn" data-type="analogous">Analogous</button>
     <button class="sidebar-btn bg-blue-500 type-btn" data-type="triadic">Triadic</button>
