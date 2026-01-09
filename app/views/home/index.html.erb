@@ -3,182 +3,150 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fixed Base Color Palette</title>
+<title>Fixed Grid Palette</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
 <style>
   :root { --navbar-height: 60px; }
-  body { margin: 0; height: 100vh; font-family: 'Inter', sans-serif; overflow: hidden; background-color: #f1f5f9; }
+  body { margin: 0; height: 100vh; overflow: hidden; font-family: sans-serif; }
 
-  .navbar { height: var(--navbar-height); width: 100%; position: fixed; top: 0; background: #0f172a; color: white; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; }
+  .navbar { height: var(--navbar-height); background: #0f172a; color: white; display: flex; align-items: center; padding: 0 24px; position: fixed; width: 100%; z-index: 100; }
 
   .main { display: flex; height: 100vh; padding-top: var(--navbar-height); }
 
-  /* พื้นที่แสดงสี */
+  /* ระบบ Grid: จองพื้นที่ไว้ 10 ช่องเท่าๆ กัน */
   #colorDisplay { 
     flex-grow: 1; 
-    display: flex; 
-    transition: all 0.5s ease;
-    background: #e2e8f0;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr); 
+    background: #f1f5f9;
+    gap: 0;
   }
 
-  /* ปรับแต่งแท่งสีให้นิ่งและลื่นไหล */
   .color-box {
-    flex: 1;
     height: 100%;
     display: flex;
     align-items: flex-end;
-    position: relative;
-    transition: flex 0.6s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s ease;
+    transition: background-color 0.3s ease;
     cursor: pointer;
-    overflow: hidden;
-    min-width: 0; /* ป้องกันการดันกันจนหลุดขอบ */
+    border-right: 1px solid rgba(0,0,0,0.05);
   }
 
-  /* ล็อกให้ Base Color มีความสำคัญและไม่เคลื่อน */
+  /* ล็อก Base Color ให้อยู่ที่คอลัมน์ที่ 1 เสมอ ไม่ว่าอะไรจะเกิดขึ้น */
   .color-box[data-type="base"] {
-    flex: 1.5; /* ให้ Base กว้างกว่าเล็กน้อยเพื่อให้เป็นจุดสังเกต */
+    grid-column: 1; 
+    border-right: 4px solid rgba(0,0,0,0.1);
   }
 
   .color-label {
     width: 100%;
     text-align: center;
-    background: rgba(0, 0, 0, 0.15);
-    backdrop-filter: blur(8px);
+    background: rgba(0,0,0,0.2);
+    backdrop-filter: blur(5px);
     color: white;
-    font-weight: 700;
-    font-family: 'JetBrains Mono', monospace;
-    padding: 25px 10px;
-    font-size: 0.9rem;
-    pointer-events: none;
+    padding: 20px 5px;
+    font-size: 12px;
+    font-weight: bold;
   }
 
-  .sidebar { width: 300px; background: white; padding: 30px 20px; border-left: 1px solid #cbd5e1; display: flex; flex-direction: column; gap: 15px; }
-
-  .sidebar-btn { @apply w-full py-3 rounded-xl font-bold transition-all text-white text-xs uppercase tracking-wider; }
-  .btn-inactive { opacity: 0.4; filter: grayscale(1); }
+  .sidebar { width: 280px; background: white; padding: 20px; border-left: 1px solid #ddd; display: flex; flex-direction: column; gap: 10px; }
+  
+  .type-btn { @apply w-full py-2 rounded-lg font-bold text-xs border-2 transition-all; }
+  .active { @apply border-slate-800 bg-slate-800 text-white; }
+  .inactive { @apply border-slate-200 text-slate-400 bg-transparent; }
 </style>
 </head>
 <body>
 
-<div class="navbar">
-  <div class="flex items-center gap-2">
-    <span class="text-2xl">🎨</span>
-    <span class="text-lg font-bold tracking-widest uppercase">Color Fixed</span>
-  </div>
-</div>
+<div class="navbar">🎨 COLOR FIXED (GRID SYSTEM)</div>
 
 <div class="main">
   <div id="colorDisplay"></div>
 
   <div class="sidebar">
-    <div class="mb-4">
-      <label class="font-bold text-gray-500 text-[10px] uppercase">Base Color</label>
-      <input type="color" id="baseColor" value="#66d7d1" class="w-full h-14 rounded-xl cursor-pointer bg-white border-2 border-slate-100 p-1 mt-1">
-    </div>
+    <label class="text-[10px] font-bold text-gray-400 uppercase">Select Base</label>
+    <input type="color" id="basePicker" value="#66d7d1" class="w-full h-12 rounded cursor-pointer mb-4">
 
-    <div class="flex flex-col gap-2">
-      <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Toggle Schemes</p>
-      <button class="sidebar-btn bg-blue-500 type-btn" data-type="analogous">Analogous</button>
-      <button class="sidebar-btn bg-indigo-500 type-btn" data-type="triadic">Triadic</button>
-      <button class="sidebar-btn bg-purple-500 type-btn" data-type="split">Split-Comp</button>
-      <button class="sidebar-btn bg-pink-500 type-btn" data-type="tints">Tints</button>
-      <button class="sidebar-btn bg-rose-500 type-btn" data-type="shades">Shades</button>
-    </div>
+    <p class="text-[10px] font-bold text-gray-400 uppercase">Schemes</p>
+    <button class="type-btn inactive" data-type="analogous">Analogous</button>
+    <button class="type-btn inactive" data-type="triadic">Triadic</button>
+    <button class="type-btn inactive" data-type="tints">Tints</button>
+    <button class="type-btn inactive" data-type="shades">Shades</button>
   </div>
 </div>
 
 <script>
-/* Color Logic (Helper Functions) */
-const hexToRgb = h => {
-  const n = parseInt(h.replace("#",""),16);
-  return { r:(n>>16)&255, g:(n>>8)&255, b:n&255 };
-}
-const rgbToHex = (r,g,b) => "#"+[r,g,b].map(c=>c.toString(16).padStart(2,"0")).join("").toUpperCase();
-const rgbToHsl = (r,g,b) => {
-  r/=255; g/=255; b/=255;
-  let max=Math.max(r,g,b), min=Math.min(r,g,b), h=0, s=0, l=(max+min)/2;
-  if(max!==min){
-    let d=max-min;
-    s=l>0.5 ? d/(2-max-min) : d/(max+min);
-    if(max===r) h=(g-b)/d + (g<b?6:0);
-    else if(max===g) h=(b-r)/d +2;
-    else h=(r-g)/d +4;
+const picker = document.getElementById("basePicker");
+const display = document.getElementById("colorDisplay");
+let activeSchemes = { analogous: false, triadic: false, tints: false, shades: false };
+
+// ฟังก์ชันแปลงสีพื้นฐาน
+const hexToHsl = (hex) => {
+  let r=parseInt(hex.slice(1,3),16)/255, g=parseInt(hex.slice(3,5),16)/255, b=parseInt(hex.slice(5,7),16)/255;
+  let max=Math.max(r,g,b), min=Math.min(r,g,b), h, s, l=(max+min)/2;
+  if(max==min) h=s=0;
+  else {
+    let d=max-min; s=l>0.5?d/(2-max-min):d/(max+min);
+    switch(max){ case r:h=(g-b)/d+(g<b?6:0);break; case g:h=(b-r)/d+2;break; case b:h=(r-g)/d+4;break; }
     h*=60;
   }
   return {h, s:s*100, l:l*100};
-}
+};
+
 const hslToHex = (h,s,l) => {
-  s/=100; l/=100;
-  const k=n=>(n + h/30) % 12, a = s * Math.min(l, 1-l), f=n => l - a * Math.max(-1, Math.min(k(n)-3, Math.min(9-k(n),1)));
-  return rgbToHex(Math.round(f(0)*255), Math.round(f(8)*255), Math.round(f(4)*255));
-}
-
-let activeTypes = { analogous: false, triadic: false, split: false, tints: false, shades: false };
-
-function getSchemeColors(hex) {
-  const {r,g,b}=hexToRgb(hex), {h,s,l}=rgbToHsl(r,g,b);
-  const clamp = v => ((v % 360) + 360) % 360;
-  return {
-    base: [hex],
-    analogous: [hslToHex(clamp(h+30),s,l), hslToHex(clamp(h-30),s,l)],
-    triadic: [hslToHex(clamp(h+120),s,l), hslToHex(clamp(h-120),s,l)],
-    split: [hslToHex(clamp(h+150),s,l), hslToHex(clamp(h-150),s,l)],
-    tints: [hslToHex(h,s,Math.min(l+15,100)), hslToHex(h,s,Math.min(l+30,100))],
-    shades: [hslToHex(h,s,Math.max(l-15,0)), hslToHex(h,s,Math.max(l-30,0))]
-  };
-}
+  l/=100; const a=s*Math.min(l,1-l)/100;
+  const f=n=>{ const k=(n+h/30)%12; return l-a*Math.max(Math.min(k-3,9-k,1),-1); };
+  return `#${[0,8,4].map(i=>Math.round(f(i)*255).toString(16).padStart(2,'0')).join('')}`.toUpperCase();
+};
 
 function render() {
-  const display = document.getElementById("colorDisplay");
-  const hex = document.getElementById("baseColor").value;
-  const schemes = getSchemeColors(hex);
-  
+  const baseHex = picker.value.toUpperCase();
+  const hsl = hexToHsl(baseHex);
   display.innerHTML = "";
 
-  // 1. วาด Base Color ก่อนเสมอ (ให้มันอยู่ซ้ายสุดไม่เคลื่อน)
-  createBox(hex, 'base', display);
+  // 1. วาด Base Color ลงช่องที่ 1 เสมอ
+  addBox(baseHex, 'base');
 
-  // 2. วาดสีอื่นๆ ตามที่กดเลือก
-  Object.keys(activeTypes).forEach(type => {
-    if (activeTypes[type]) {
-      schemes[type].forEach(color => createBox(color, type, display));
+  // 2. คำนวณสีอื่นๆ
+  const schemes = {
+    analogous: [hslToHex(hsl.h+30, hsl.s, hsl.l), hslToHex(hsl.h-30, hsl.s, hsl.l)],
+    triadic: [hslToHex(hsl.h+120, hsl.s, hsl.l), hslToHex(hsl.h+240, hsl.s, hsl.l)],
+    tints: [hslToHex(hsl.h, hsl.s, 85), hslToHex(hsl.h, hsl.s, 70)],
+    shades: [hslToHex(hsl.h, hsl.s, 30), hslToHex(hsl.h, hsl.s, 15)]
+  };
+
+  // 3. วาดสีที่เหลือลงช่องถัดๆ ไป (2, 3, 4...)
+  Object.keys(activeSchemes).forEach(type => {
+    if(activeSchemes[type]) {
+      schemes[type].forEach(color => addBox(color, type));
     }
   });
 }
 
-function createBox(color, type, container) {
-  const box = document.createElement("div");
-  box.className = "color-box";
-  box.dataset.type = type;
-  box.style.backgroundColor = color;
-  box.innerHTML = `<div class="color-label"><span class="block text-[10px] opacity-60 mb-1">${type.toUpperCase()}</span>${color}</div>`;
-  
-  box.onclick = () => {
+function addBox(color, type) {
+  const div = document.createElement("div");
+  div.className = "color-box";
+  div.dataset.type = type;
+  div.style.backgroundColor = color;
+  div.innerHTML = `<div class="color-label">${color}</div>`;
+  div.onclick = () => {
     navigator.clipboard.writeText(color);
-    const label = box.querySelector('.color-label');
-    const original = label.innerHTML;
-    label.innerText = "COPIED!";
-    setTimeout(() => label.innerHTML = original, 800);
+    alert("Copied: " + color);
   };
-  
-  container.appendChild(box);
+  display.appendChild(div);
 }
 
-const picker = document.getElementById("baseColor");
+// Event Listeners
 picker.oninput = render;
-
 document.querySelectorAll(".type-btn").forEach(btn => {
-  btn.classList.add("btn-inactive");
   btn.onclick = () => {
     const type = btn.dataset.type;
-    activeTypes[type] = !activeTypes[type];
-    btn.classList.toggle("btn-inactive");
+    activeSchemes[type] = !activeSchemes[type];
+    btn.classList.toggle("active");
+    btn.classList.toggle("inactive");
     render();
   };
 });
 
-// Initial Render
 render();
 </script>
 </body>
