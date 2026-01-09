@@ -3,52 +3,56 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Color Matcher Fixed</title>
+<title>Color Matcher Fixed - Full Corner</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-  /* ลบขอบขาวรอบตัวเว็บเพื่อให้ชิดมุมสุด */
+  /* 1. Reset พื้นฐานให้ชิดขอบจอที่สุด */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
   html, body { 
-    margin:0; padding:0; 
-    height:100%; width:100%; 
-    font-family:sans-serif; 
+    height: 100%; width: 100%; 
+    font-family: sans-serif; 
     overflow: hidden; 
+    background-color: #f3f4f6;
   }
-  *, *::before, *::after { box-sizing:border-box; }
 
-  /* Navbar ชิดขอบบน */
+  /* 2. Navbar ชิดขอบบนและอยู่ชั้นบนสุด */
   .navbar { 
-    height:56px; 
-    width:100%; 
-    position:fixed; 
-    top:0; left:0; 
-    display:flex; 
-    justify-content:space-between; 
-    align-items:center; 
-    padding:0 24px; 
-    background:#1f2937; 
-    color:white; 
-    z-index:50; 
+    height: 56px; 
+    width: 100%; 
+    position: fixed; 
+    top: 0; left: 0; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 0 24px; 
+    background: #1f2937; 
+    color: white; 
+    z-index: 100; /* อยู่เหนือทุกอย่าง */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
   }
 
-  /* Layout Container */
+  /* 3. Layout Main ขยายเต็มจอ */
   .main { 
-    display:flex; 
-    height:100vh; 
-    padding-top:56px; 
-    background: #f3f4f6;
+    display: flex; 
+    height: 100vh; 
+    width: 100vw;
+    padding-top: 56px; 
   }
 
-  /* Area แสดงสี: เปลี่ยนเป็น Grid แบบล็อกคอลัมน์เพื่อไม่ให้เคลื่อน */
+  /* 4. พื้นที่แสดงสี ชิดมุมซ้ายและล่างสุด */
   #colorDisplay { 
     flex-grow: 1;
     display: grid;
-    /* จองที่ไว้ 10 ช่อง ช่องละเท่าๆ กันเพื่อให้ Base อยู่ที่เดิมเสมอ */
+    /* แบ่ง 10 ช่องถาวรเพื่อให้ Base ไม่เคลื่อน */
     grid-template-columns: repeat(10, 1fr); 
-    padding: 0; /* เอา Padding ออกเพื่อให้สีชิดขอบจอ */
-    gap: 0;    /* เอาช่องว่างออกเพื่อให้แถบสีต่อกันสนิท */
+    padding: 0; 
+    gap: 0; 
+    height: 100%;
+    background: #e5e7eb; /* สีเทาพื้นหลังชิดมุม */
   }
 
-  /* Sidebar ชิดขวาสุด */
+  /* 5. Sidebar ชิดขวาสุด */
   .sidebar {
     width: 280px;
     flex-shrink: 0;
@@ -58,7 +62,8 @@
     flex-direction: column;
     gap: 12px;
     border-left: 1px solid #d1d5db;
-    z-index: 40;
+    z-index: 50;
+    overflow-y: auto;
   }
 
   .sidebar-btn {
@@ -66,17 +71,16 @@
   }
   .btn-active { @apply ring-4 ring-slate-200; filter: brightness(0.8); }
 
-  /* Color Box: ให้เต็มความสูงและไม่มีขอบมนเพื่อให้ชิดมุม */
+  /* แท่งสีชิดขอบบน-ล่าง-ซ้าย */
   .color-box {
     height: 100%; 
     display: flex; 
     align-items: flex-end; 
     justify-content: center;
     position: relative;
-    transition: flex 0.3s;
   }
   
-  /* ล็อก Base Color ให้อยู่ Column ที่ 1 เสมอ */
+  /* ล็อก Base ไว้ที่ช่องแรกเสมอ */
   .color-box[data-type="base"] {
     grid-column: 1;
   }
@@ -84,13 +88,22 @@
   .color-label {
     width: 100%; 
     text-align: center; 
-    background: rgba(0,0,0,0.2); 
+    background: rgba(0,0,0,0.25); 
     backdrop-filter: blur(8px);
     color: white;
     font-weight: bold;
     font-family: monospace;
-    padding: 20px 5px;
+    padding: 25px 5px;
+    font-size: 0.85rem;
   }
+
+  /* ปุ่ม Login ให้กดได้จริง */
+  .login-btn {
+    @apply bg-blue-600 px-5 py-2 rounded-lg font-bold text-sm transition;
+    cursor: pointer;
+    pointer-events: auto;
+  }
+  .login-btn:hover { @apply bg-blue-700; }
 
   @media (max-width: 768px) {
     .main { flex-direction: column; }
@@ -106,7 +119,7 @@
     <span class="text-2xl">🎨</span>
     <span class="text-lg font-bold tracking-wide uppercase">Color Fixed</span>
   </div>
-  <button class="bg-blue-600 px-4 py-2 rounded-lg font-bold text-sm hover:bg-blue-700 transition">LOGIN</button>
+  <button class="login-btn" onclick="alert('Login Clicked!')">LOGIN</button>
 </div>
 
 <div class="main">
@@ -115,7 +128,7 @@
   <div class="sidebar">
     <div class="mb-2">
       <div class="flex justify-between items-end mb-1">
-        <label class="font-bold text-gray-500 text-xs uppercase">Base Color</label>
+        <label class="font-bold text-gray-400 text-[10px] uppercase">Base Color</label>
         <div id="hexText" class="font-mono font-bold text-blue-600"></div>
       </div>
       <input type="color" id="baseColor" value="#66d7d1" class="w-full h-14 rounded-xl cursor-pointer bg-white border-2 border-slate-100 p-1">
@@ -133,7 +146,7 @@
 </div>
 
 <script>
-/* Color Logic (Helper Functions เหมือนเดิม) */
+/* Color Logic */
 const hexToRgb = h => {
   const n = parseInt(h.replace("#",""),16);
   return { r:(n>>16)&255, g:(n>>8)&255, b:n&255 };
