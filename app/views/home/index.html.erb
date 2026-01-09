@@ -3,111 +3,60 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Color Matcher Horizontal</title>
+<title>Fixed Base Color Palette</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
 <style>
   :root { --navbar-height: 60px; }
-  html, body { 
-    margin: 0; padding: 0; 
-    height: 100%; width: 100%; 
-    font-family: 'Inter', sans-serif; 
-    overflow: hidden;
-    background-color: #f1f5f9;
-  }
+  body { margin: 0; height: 100vh; font-family: 'Inter', sans-serif; overflow: hidden; background-color: #f1f5f9; }
 
-  /* Navbar */
-  .navbar { 
-    height: var(--navbar-height); 
-    width: 100%; 
-    position: fixed; 
-    top: 0; left: 0; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    padding: 0 24px; 
-    background: #0f172a; 
-    color: white; 
-    z-index: 100; 
-  }
+  .navbar { height: var(--navbar-height); width: 100%; position: fixed; top: 0; background: #0f172a; color: white; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; }
 
-  /* Main Layout */
-  .main { 
-    display: flex; 
-    height: 100vh; 
-    padding-top: var(--navbar-height);
-  }
+  .main { display: flex; height: 100vh; padding-top: var(--navbar-height); }
 
-  /* Area แสดงสี (เรียงแนวนอน) */
+  /* พื้นที่แสดงสี */
   #colorDisplay { 
-    flex-grow: 1;
-    display: flex; /* เปลี่ยนจาก Grid เป็น Flex เพื่อเรียงแนวนอน */
-    flex-direction: row;
-    overflow-x: auto; /* เลื่อนไปทางขวาได้ */
-    overflow-y: hidden;
+    flex-grow: 1; 
+    display: flex; 
+    transition: all 0.5s ease;
     background: #e2e8f0;
   }
 
-  /* Sidebar (ชิดขวา) */
-  .sidebar {
-    width: 300px;
+  /* ปรับแต่งแท่งสีให้นิ่งและลื่นไหล */
+  .color-box {
+    flex: 1;
     height: 100%;
-    flex-shrink: 0;
-    background: white;
-    padding: 30px 20px;
     display: flex;
-    flex-direction: column;
-    gap: 15px;
-    border-left: 1px solid #cbd5e1;
-    z-index: 50;
-    box-shadow: -5px 0 15px rgba(0,0,0,0.05);
-    order: 2; /* บังคับให้อยู่ด้านขวา */
+    align-items: flex-end;
+    position: relative;
+    transition: flex 0.6s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s ease;
+    cursor: pointer;
+    overflow: hidden;
+    min-width: 0; /* ป้องกันการดันกันจนหลุดขอบ */
   }
 
-  /* แต่ละแท่งสี */
-  .color-box {
-    flex: 1; /* แบ่งพื้นที่เท่าๆ กัน */
-    min-width: 150px; /* ความกว้างขั้นต่ำของแต่ละแท่ง */
-    height: 100%;
-    display: flex; 
-    align-items: flex-end; 
-    position: relative;
-    transition: all 0.3s ease;
-    cursor: pointer;
+  /* ล็อกให้ Base Color มีความสำคัญและไม่เคลื่อน */
+  .color-box[data-type="base"] {
+    flex: 1.5; /* ให้ Base กว้างกว่าเล็กน้อยเพื่อให้เป็นจุดสังเกต */
   }
-  .color-box:hover { 
-    min-width: 250px; /* ขยายแท่งสีเมื่อเอาเมาส์ไปชี้ */
-    z-index: 10;
-  }
-  
+
   .color-label {
-    width: 100%; 
-    text-align: center; 
-    background: rgba(0, 0, 0, 0.2); 
-    backdrop-filter: blur(10px);
+    width: 100%;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(8px);
     color: white;
     font-weight: 700;
     font-family: 'JetBrains Mono', monospace;
-    padding: 20px 10px;
-    font-size: 1.1rem;
+    padding: 25px 10px;
+    font-size: 0.9rem;
+    pointer-events: none;
   }
 
-  /* Sidebar Buttons */
-  .sidebar-btn {
-    @apply w-full py-3 rounded-xl font-bold transition-all text-white text-sm;
-    border: none;
-  }
-  .btn-active { ring: 4px solid rgba(15, 23, 42, 0.15); filter: brightness(0.8); }
+  .sidebar { width: 300px; background: white; padding: 30px 20px; border-left: 1px solid #cbd5e1; display: flex; flex-direction: column; gap: 15px; }
 
-  /* Custom Scrollbar สำหรับการเลื่อนแนวนอน */
-  #colorDisplay::-webkit-scrollbar { height: 10px; }
-  #colorDisplay::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 5px; }
-
-  @media (max-width: 768px) {
-    .main { flex-direction: column; }
-    .sidebar { width: 100%; height: auto; order: 1; border-left: none; border-bottom: 1px solid #ddd; }
-    #colorDisplay { height: 60vh; order: 2; }
-  }
+  .sidebar-btn { @apply w-full py-3 rounded-xl font-bold transition-all text-white text-xs uppercase tracking-wider; }
+  .btn-inactive { opacity: 0.4; filter: grayscale(1); }
 </style>
 </head>
 <body>
@@ -115,9 +64,8 @@
 <div class="navbar">
   <div class="flex items-center gap-2">
     <span class="text-2xl">🎨</span>
-    <span class="text-lg font-bold uppercase tracking-widest">Color Palette</span>
+    <span class="text-lg font-bold tracking-widest uppercase">Color Fixed</span>
   </div>
-  <button class="bg-blue-600 px-5 py-2 rounded-full font-bold text-xs hover:bg-blue-700 transition">LOGIN</button>
 </div>
 
 <div class="main">
@@ -125,16 +73,12 @@
 
   <div class="sidebar">
     <div class="mb-4">
-      <div class="flex justify-between items-end mb-2">
-        <label class="font-bold text-gray-500 text-xs uppercase">Base Color</label>
-        <span id="hexText" class="font-mono font-bold text-blue-600"></span>
-      </div>
-      <input type="color" id="baseColor" value="#66d7d1" class="w-full h-14 rounded-xl cursor-pointer bg-white border-2 border-slate-100 p-1">
+      <label class="font-bold text-gray-500 text-[10px] uppercase">Base Color</label>
+      <input type="color" id="baseColor" value="#66d7d1" class="w-full h-14 rounded-xl cursor-pointer bg-white border-2 border-slate-100 p-1 mt-1">
     </div>
 
     <div class="flex flex-col gap-2">
       <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Toggle Schemes</p>
-      <button class="sidebar-btn bg-slate-900 type-btn btn-active" data-type="base">Base Color</button>
       <button class="sidebar-btn bg-blue-500 type-btn" data-type="analogous">Analogous</button>
       <button class="sidebar-btn bg-indigo-500 type-btn" data-type="triadic">Triadic</button>
       <button class="sidebar-btn bg-purple-500 type-btn" data-type="split">Split-Comp</button>
@@ -145,7 +89,7 @@
 </div>
 
 <script>
-/* Color Logic */
+/* Color Logic (Helper Functions) */
 const hexToRgb = h => {
   const n = parseInt(h.replace("#",""),16);
   return { r:(n>>16)&255, g:(n>>8)&255, b:n&255 };
@@ -170,7 +114,9 @@ const hslToHex = (h,s,l) => {
   return rgbToHex(Math.round(f(0)*255), Math.round(f(8)*255), Math.round(f(4)*255));
 }
 
-function generateColors(hex){
+let activeTypes = { analogous: false, triadic: false, split: false, tints: false, shades: false };
+
+function getSchemeColors(hex) {
   const {r,g,b}=hexToRgb(hex), {h,s,l}=rgbToHsl(r,g,b);
   const clamp = v => ((v % 360) + 360) % 360;
   return {
@@ -183,48 +129,57 @@ function generateColors(hex){
   };
 }
 
-let currentColors = generateColors("#66d7d1");
-let activeTypes = { base: true, analogous: false, triadic: false, split: false, tints: false, shades: false };
-
-function renderAll(){
+function render() {
   const display = document.getElementById("colorDisplay");
+  const hex = document.getElementById("baseColor").value;
+  const schemes = getSchemeColors(hex);
+  
   display.innerHTML = "";
+
+  // 1. วาด Base Color ก่อนเสมอ (ให้มันอยู่ซ้ายสุดไม่เคลื่อน)
+  createBox(hex, 'base', display);
+
+  // 2. วาดสีอื่นๆ ตามที่กดเลือก
   Object.keys(activeTypes).forEach(type => {
-    if(activeTypes[type]){
-      currentColors[type].forEach(c => {
-        const box = document.createElement("div");
-        box.className = "color-box";
-        box.style.backgroundColor = c;
-        box.innerHTML = `<div class="color-label">${c}</div>`;
-        box.onclick = () => {
-          navigator.clipboard.writeText(c);
-          const label = box.querySelector('.color-label');
-          label.innerText = "COPIED!";
-          setTimeout(() => { label.innerText = c; }, 800);
-        };
-        display.appendChild(box);
-      });
+    if (activeTypes[type]) {
+      schemes[type].forEach(color => createBox(color, type, display));
     }
   });
 }
 
+function createBox(color, type, container) {
+  const box = document.createElement("div");
+  box.className = "color-box";
+  box.dataset.type = type;
+  box.style.backgroundColor = color;
+  box.innerHTML = `<div class="color-label"><span class="block text-[10px] opacity-60 mb-1">${type.toUpperCase()}</span>${color}</div>`;
+  
+  box.onclick = () => {
+    navigator.clipboard.writeText(color);
+    const label = box.querySelector('.color-label');
+    const original = label.innerHTML;
+    label.innerText = "COPIED!";
+    setTimeout(() => label.innerHTML = original, 800);
+  };
+  
+  container.appendChild(box);
+}
+
 const picker = document.getElementById("baseColor");
-picker.oninput = () => {
-  currentColors = generateColors(picker.value);
-  document.getElementById("hexText").textContent = picker.value.toUpperCase();
-  renderAll();
-};
+picker.oninput = render;
 
 document.querySelectorAll(".type-btn").forEach(btn => {
+  btn.classList.add("btn-inactive");
   btn.onclick = () => {
-    activeTypes[btn.dataset.type] = !activeTypes[btn.dataset.type];
-    btn.classList.toggle("btn-active");
-    renderAll();
+    const type = btn.dataset.type;
+    activeTypes[type] = !activeTypes[type];
+    btn.classList.toggle("btn-inactive");
+    render();
   };
 });
 
-document.getElementById("hexText").textContent = picker.value.toUpperCase();
-renderAll();
+// Initial Render
+render();
 </script>
 </body>
 </html>
