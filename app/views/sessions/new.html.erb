@@ -1,0 +1,48 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+  <div class="max-w-md w-full bg-white rounded-lg shadow-lg overflow-hidden">
+    
+    <div class="bg-gray-800 p-6 text-center">
+      <h2 class="text-3xl font-bold text-white">🎨 Color Matcher</h2>
+      <p class="text-gray-400 mt-2">ลงชื่อเข้าใช้เพื่อบันทึกชุดสีของคุณ</p>
+    </div>
+
+    <div class="p-8">
+      <form action="/login" method="POST"> <div class="mb-6">
+          <label for="email" class="block text-gray-700 font-bold mb-2">อีเมล</label>
+          <input type="email" id="email" name="email" placeholder="example@email.com" 
+            class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-300 focus:border-blue-500 focus:bg-white focus:outline-none transition duration-200" required>
+        </div>
+
+        <div class="mb-6">
+          <label for="password" class="block text-gray-700 font-bold mb-2">รหัสผ่าน</label>
+          <input type="password" id="password" name="password" placeholder="••••••••" 
+            class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-300 focus:border-blue-500 focus:bg-white focus:outline-none transition duration-200" required>
+        </div>
+
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center">
+            <input type="checkbox" id="remember" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+            <label for="remember" class="ml-2 block text-sm text-gray-700">จำฉันไว้ในระบบ</label>
+          </div>
+          <a href="#" class="text-sm text-blue-600 hover:underline">ลืมรหัสผ่าน?</a>
+        </div>
+
+        <button type="submit" 
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition duration-200 shadow-md transform hover:-translate-y-0.5">
+          เข้าสู่ระบบ
+        </button>
+      </form>
+
+      <div class="mt-8 border-t border-gray-200 pt-6 text-center">
+        <p class="text-gray-600">
+          ยังไม่มีบัญชีใช่ไหม? 
+          <a href="/signup" class="text-blue-600 font-bold hover:underline">สมัครสมาชิก</a>
+        </p>
+        <div class="mt-4">
+            <a href="/" class="text-sm text-gray-500 hover:text-gray-800">← กลับหน้าหลัก</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

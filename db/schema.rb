@@ -10,30 +10,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_17_052019) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_19_161836) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
-  create_table "color_matches", force: :cascade do |t|
-    t.bigint "color1_id", null: false
-    t.bigint "color2_id", null: false
+  create_table "color_matches", id: :serial, force: :cascade do |t|
+    t.integer "color1_id", null: false
+    t.integer "color2_id", null: false
     t.decimal "match_score", precision: 5, scale: 2, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["color1_id"], name: "index_color_matches_on_color1_id"
-    t.index ["color2_id"], name: "index_color_matches_on_color2_id"
+    t.timestamptz "created_at", default: -> { "CURRENT_TIMESTAMP" }
+    t.check_constraint "match_score >= 0::numeric AND match_score <= 100::numeric", name: "color_matches_match_score_check"
   end
 
-  create_table "colors", force: :cascade do |t|
+  create_table "colors", id: :serial, force: :cascade do |t|
     t.string "name", limit: 50, null: false
     t.string "hex_code", limit: 7, null: false
     t.integer "rgb_r", null: false
     t.integer "rgb_g", null: false
     t.integer "rgb_b", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.timestamptz "created_at", default: -> { "CURRENT_TIMESTAMP" }
+    t.timestamptz "updated_at", default: -> { "CURRENT_TIMESTAMP" }
+    t.string "category"
+    t.check_constraint "rgb_b >= 0 AND rgb_b <= 255", name: "colors_rgb_b_check"
+    t.check_constraint "rgb_g >= 0 AND rgb_g <= 255", name: "colors_rgb_g_check"
+    t.check_constraint "rgb_r >= 0 AND rgb_r <= 255", name: "colors_rgb_r_check"
   end
 
-  add_foreign_key "color_matches", "colors", column: "color1_id", on_delete: :cascade
-  add_foreign_key "color_matches", "colors", column: "color2_id", on_delete: :cascade
+  add_foreign_key "color_matches", "colors", column: "color1_id", name: "color_matches_color1_id_fkey", on_delete: :cascade
+  add_foreign_key "color_matches", "colors", column: "color2_id", name: "color_matches_color2_id_fkey", on_delete: :cascade
 end

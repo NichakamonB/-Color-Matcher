@@ -6,7 +6,12 @@
 <title>Color Matcher</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-  html, body { margin:0; padding:0; height:100%; width:100%; font-family:sans-serif; }
+  html, body { 
+    margin:0; padding:0; 
+    height:100%; width:100%; 
+    font-family:sans-serif; 
+    overflow: hidden; /* ป้องกัน Scrollbar ของ Browser โผล่มาซ้อน */
+  }
   *, *::before, *::after { box-sizing:border-box; }
 
   /* Navbar */
@@ -14,8 +19,7 @@
     height:56px; 
     width:100%; 
     position:fixed; 
-    top:0; 
-    left:0; 
+    top:0; left:0; 
     display:flex; 
     justify-content:space-between; 
     align-items:center; 
@@ -23,90 +27,148 @@
     background:#1f2937; 
     color:white; 
     z-index:50; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   }
-  .btn-login { background:#3b82f6; padding:8px 16px; border-radius:8px; font-weight:bold; }
+  .btn-login { background:#3b82f6; padding:6px 16px; border-radius:8px; font-weight:bold; font-size: 0.9rem; }
 
-  /* Layout */
-  .main { display:flex; height:100vh; padding-top:56px; }
-
-  #colorDisplay { 
-    flex:1; 
+  /* Layout Container */
+  .main { 
     display:flex; 
-    flex-wrap:wrap; 
-    gap:8px; 
-    padding:8px; 
-    overflow-y:auto; 
-    background:#e5e7eb;
+    height:100vh; 
+    padding-top:56px; /* เว้นที่ให้ Navbar */
+    background: #f3f4f6;
   }
 
+  /* Area แสดงสี */
+  #colorDisplay { 
+    flex-grow: 1; /* กินพื้นที่ที่เหลือทั้งหมด */
+    display: grid;
+    /* Grid แบบ Auto-fit: ปรับจำนวนคอลัมน์ตามความกว้างหน้าจออัตโนมัติ */
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    align-content: flex-start; /* ให้สีเริ่มเรียงจากบนลงล่าง ไม่กระจาย */
+    gap: 12px; 
+    padding: 16px; 
+    overflow-y: auto; /* Scroll เฉพาะตรงนี้ */
+  }
+
+  /* Sidebar เมนู */
   .sidebar {
-    width:260px;
-    background:white;
-    padding:16px;
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-    border-left:1px solid #d1d5db;
-    overflow-y:auto;
+    width: 280px;
+    flex-shrink: 0; /* ห้ามหด */
+    background: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border-left: 1px solid #d1d5db;
+    overflow-y: auto;
+    z-index: 40;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.05);
   }
 
   .sidebar-btn {
-    @apply w-full py-3 rounded-lg font-semibold cursor-pointer transition text-white;
+    @apply w-full py-3 rounded-lg font-semibold cursor-pointer transition text-white shadow-sm;
+    border: none;
   }
-  .btn-active { background:#1f2937 !important; }
+  .sidebar-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+  .sidebar-btn:active { transform: translateY(0); }
+  .btn-active { background:#1f2937 !important; ring: 2px solid #374151; }
 
-  /* Color boxes */
+  /* Color Box Styles */
   .color-box {
-    flex:1 1 120px;
-    height:200px;
-    display:flex; 
-    align-items:flex-end; 
-    justify-content:center;
-    color:white; 
-    font-weight:bold; 
-    border-radius:0.5rem; 
-    box-shadow:0 2px 6px rgba(0,0,0,0.2);
+    height: 180px;
+    border-radius: 12px;
+    display: flex; 
+    align-items: flex-end; 
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s;
   }
+  .color-box:hover { transform: scale(1.02); z-index: 10; }
+  
   .color-label {
-    width:100%; 
-    text-align:center; 
-    background:rgba(0,0,0,0.4); 
-    padding:4px;
-    border-bottom-left-radius:0.5rem; 
-    border-bottom-right-radius:0.5rem;
+    width: 100%; 
+    text-align: center; 
+    background: rgba(0,0,0,0.3); 
+    backdrop-filter: blur(4px);
+    color: white;
+    font-weight: bold;
+    font-family: monospace;
+    padding: 8px;
+    border-bottom-left-radius: 12px; 
+    border-bottom-right-radius: 12px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  }
+
+  /* ================= RESPONSIVE (มือถือ) ================= */
+  @media (max-width: 768px) {
+    .main { 
+      flex-direction: column; /* เรียงเป็นแนวตั้ง */
+    }
+    
+    #colorDisplay {
+      height: 60%; /* ให้พื้นที่สี 60% */
+      padding: 10px;
+    }
+
+    .sidebar {
+      width: 100%; /* กว้างเต็มจอ */
+      height: 40%; /* สูง 40% */
+      border-left: none;
+      border-top: 1px solid #d1d5db;
+      flex-direction: row; /* ปุ่มเรียงแนวนอน */
+      flex-wrap: wrap; /* ปุ่มล้นให้ขึ้นบรรทัดใหม่ */
+      align-content: flex-start;
+      padding: 12px;
+    }
+
+    /* ปรับขนาด Input สีในมือถือ */
+    .color-picker-container { width: 100%; display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
+    #baseColor { flex: 1; height: 40px; }
+    #hexText { font-size: 1rem; }
+    
+    /* ปรับปุ่มในมือถือให้เล็กหน่อยจะได้วางพอ */
+    .sidebar-btn { width: 30%; flex-grow: 1; padding: 8px; font-size: 0.85rem; }
+    hr { display: none; } /* ซ่อนเส้นคั่นในมือถือ */
   }
 </style>
 </head>
 <body>
 
-<!-- Navbar -->
 <div class="navbar">
-  <div class="text-xl font-bold">🎨 Color Matcher</div>
-  <button class="btn-login">ลงชื่อเข้าใช้</button>
+  <div class="flex items-center gap-2">
+    <span class="text-2xl">🎨</span>
+    <span class="text-lg font-bold tracking-wide">Color Matcher</span>
+  </div>
+  <button class="btn-login hover:bg-blue-600 transition">ลงชื่อเข้าใช้</button>
 </div>
 
-<!-- Main Layout -->
 <div class="main">
-  <!-- Color Display -->
   <div id="colorDisplay"></div>
 
-  <!-- Sidebar -->
   <div class="sidebar">
-    <label class="font-bold text-lg">เลือกสี Base</label>
-    <input type="color" id="baseColor" value="#66d7d1" class="w-full h-16 rounded cursor-pointer border">
-    <div id="hexText" class="text-center font-bold text-gray-800 text-lg"></div>
-    <hr class="my-2">
-    <button class="sidebar-btn bg-blue-500 type-btn" data-type="base">Base</button>
+    <div class="color-picker-container w-full">
+      <div class="flex justify-between items-end mb-1">
+        <label class="font-bold text-gray-700">Base Color</label>
+        <div id="hexText" class="font-mono font-bold text-gray-500"></div>
+      </div>
+      <input type="color" id="baseColor" value="#66d7d1" class="w-full h-12 rounded-lg cursor-pointer border-2 border-gray-200 p-1 bg-white">
+    </div>
+    
+    <hr class="border-gray-200 w-full">
+    
+    <button class="sidebar-btn bg-emerald-500 type-btn btn-active" data-type="base">Base</button>
     <button class="sidebar-btn bg-blue-500 type-btn" data-type="analogous">Analogous</button>
-    <button class="sidebar-btn bg-blue-500 type-btn" data-type="triadic">Triadic</button>
-    <button class="sidebar-btn bg-blue-500 type-btn" data-type="split">Split</button>
-    <button class="sidebar-btn bg-blue-500 type-btn" data-type="tints">Tints</button>
-    <button class="sidebar-btn bg-blue-500 type-btn" data-type="shades">Shades</button>
+    <button class="sidebar-btn bg-indigo-500 type-btn" data-type="triadic">Triadic</button>
+    <button class="sidebar-btn bg-purple-500 type-btn" data-type="split">Split-Comp</button>
+    <button class="sidebar-btn bg-pink-500 type-btn" data-type="tints">Tints</button>
+    <button class="sidebar-btn bg-rose-500 type-btn" data-type="shades">Shades</button>
   </div>
 </div>
 
 <script>
-/* ================== COLOR FUNCTIONS ================== */
+/* ================== COLOR FUNCTIONS (เหมือนเดิม) ================== */
 function hexToRgb(hex){
   const n = parseInt(hex.replace("#",""),16);
   return { r:(n>>16)&255, g:(n>>8)&255, b:n&255 };
@@ -160,15 +222,7 @@ function generateColors(hex){
 
 /* ================== RENDER ================== */
 let currentColors = generateColors("#66d7d1");
-
-let activeTypes = {
-  base: true,
-  analogous: false,
-  triadic: false,
-  split: false,
-  tints: false,
-  shades: false
-};
+let activeTypes = { base: true, analogous: false, triadic: false, split: false, tints: false, shades: false };
 
 function renderAll(){
   const display = document.getElementById("colorDisplay");
@@ -181,6 +235,14 @@ function renderAll(){
         box.className = "color-box";
         box.style.background = c;
         box.innerHTML = `<div class="color-label">${c}</div>`;
+        
+        // เพิ่มลูกเล่นคลิกเพื่อ Copy
+        box.onclick = () => {
+             navigator.clipboard.writeText(c);
+             alert("Copied: " + c);
+        };
+        box.style.cursor = "pointer";
+
         display.appendChild(box);
       });
     }
@@ -200,6 +262,14 @@ document.querySelectorAll(".type-btn").forEach(btn=>{
     const type = btn.dataset.type;
     activeTypes[type] = !activeTypes[type];
     btn.classList.toggle("btn-active");
+    
+    // Toggle Tailwind ring for visual feedback
+    if(activeTypes[type]) {
+       btn.classList.add('ring-2', 'ring-offset-1', 'ring-gray-400');
+    } else {
+       btn.classList.remove('ring-2', 'ring-offset-1', 'ring-gray-400');
+    }
+
     renderAll();
   });
 });

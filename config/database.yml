@@ -9,7 +9,8 @@ development:
   database: color_matcher
   username: color_matcher_user
   password: JYUqf2yNmbxAYM1q1evqLKmstL2X0rGh
-  host: dpg-d4d2a3ripnbc739pot90-a.singapore-postgres.render.com
+  host: dpg-d4d2a3ripnbc739pot90-a.singapore-postgres.render.com # (ตัวอย่าง)
+  sslmode: require
   port: 5432
   pool: 5
 
@@ -23,10 +24,13 @@ test:
   
 production:
   <<: *default
-  database: color_matcher
-  username: color_matcher_user
-  password: <%= ENV["DB_PASSWORD"] %>
-  host: dpg-d4d2a3ripnbc739pot90-a.singapore-postgres.render.com
-  port: 5432
-  sslmode: require
+  url: <%= ENV['DATABASE_URL'] %>
+  # หากไม่ใช้ DATABASE_URL ให้ใช้การตั้งค่าด้านล่างนี้แทน:
+  # database: color_matcher
+  # username: color_matcher_user
+  # password: <%= ENV["DB_PASSWORD"] %>
+  # host: dpg-d4d2a3ripnbc739pot90-a.singapore-postgres.render.com
+  # port: 5432
+  ssl_params:
+    verify_mode: <%= OpenSSL::SSL::VERIFY_NONE %>
 

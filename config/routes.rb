@@ -17,4 +17,8 @@ Rails.application.routes.draw do
 
   match "*path", to: "application#not_found", via: :all
 
+  get '/login', to: 'sessions#new'
+  post '/login', to: 'sessions#create'
+  get '/logout', to: 'sessions#destroy
+
 end

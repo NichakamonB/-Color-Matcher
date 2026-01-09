@@ -4,3 +4,15 @@
   [1m[36mActiveRecord::SchemaMigration Load (41.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='App'*/[0m
   [1m[35m (38.3ms)[0m  [1m[34mSELECT pg_advisory_unlock(1196062929792122490) /*application='App'*/[0m
   [1m[36mActiveRecord::SchemaMigration Load (177.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='App'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (38.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='App'*/[0m
+  [1m[35m (112.1ms)[0m  [1m[34mSELECT pg_try_advisory_lock(1196062929792122490) /*application='App'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (84.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='App'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (180.3ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='App'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Update (58.5ms)[0m  [1m[33mUPDATE "ar_internal_metadata" SET "value" = 'development', "updated_at" = '2025-11-19 16:20:13.796973' WHERE "ar_internal_metadata"."key" = 'environment' /*application='App'*/[0m
+Migrating to AddCategoryToColors (20251119161836)
+  [1m[36mTRANSACTION (428.5ms)[0m  [1m[35mBEGIN /*application='App'*/[0m
+  [1m[35m (590.3ms)[0m  [1m[35mALTER TABLE "colors" ADD "category" character varying /*application='App'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (90.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20251119161836') RETURNING "version" /*application='App'*/[0m
+  [1m[36mTRANSACTION (45.4ms)[0m  [1m[35mCOMMIT /*application='App'*/[0m
+  [1m[35m (79.9ms)[0m  [1m[34mSELECT pg_advisory_unlock(1196062929792122490) /*application='App'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (96.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='App'*/[0m
