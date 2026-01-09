@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Color Matcher - No White Border</title>
+    <title>Color Matcher - Fixed & Full Bleed</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* ลบขอบขาวทิ้งทั้งหมด 100% */
+        /* 1. บังคับลบขอบขาวทุกด้าน 100% */
         * { 
             margin: 0 !important; 
             padding: 0 !important; 
@@ -17,87 +17,88 @@
             height: 100%; 
             width: 100%; 
             overflow: hidden; 
-            background: #1f2937; /* สีเดียวกับ Navbar กันขอบแลบ */
+            font-family: sans-serif; 
+            background: #e5e7eb; /* สีเทาพื้นหลังชิดมุม */
         }
 
-        /* Navbar ชิดขอบบน */
+        /* 2. Navbar ชิดขอบบนถาวร */
         .navbar { 
             height: 56px; 
             width: 100%; 
             position: fixed; 
-            top: 0; left: 0; 
+            top: 0; 
+            left: 0; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            padding: 0 24px !important; /* เว้นเฉพาะตัวหนังสือข้างใน */
+            padding: 0 24px !important; /* เว้นระยะเฉพาะตัวหนังสือข้างใน */
             background: #1f2937; 
             color: white; 
-            z-index: 100;
+            z-index: 100; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
 
-        /* Container หลักชิดขอบจอ */
-        .main-layout { 
+        .main-container { 
             display: flex; 
             height: 100vh; 
-            width: 100vw;
-            padding-top: 56px; /* เว้นที่ให้ Navbar */
+            width: 100vw; 
+            padding-top: 56px; 
         }
 
-        /* Area แสดงสี: ชิดซ้ายและล่างสุดแบบไม่มีรอยต่อ */
+        /* 3. ล็อก Grid 10 ช่องถาวร ช่องละ 10% เพื่อไม่ให้เคลื่อน */
         #colorDisplay { 
             flex-grow: 1; 
-            display: grid;
-            grid-template-columns: repeat(10, 1fr); /* จอง 10 ช่องถาวร */
-            height: 100%;
-            background: #e5e7eb; /* สีเทารองพื้นชิดมุม */
+            display: grid; 
+            grid-template-columns: repeat(10, 10%); 
+            height: 100%; 
+            background: #e5e7eb;
         }
 
-        .color-box {
-            height: 100%;
-            display: flex;
-            align-items: flex-end;
-            position: relative;
-            border: none;
-            outline: none;
+        .color-box { 
+            height: 100%; 
+            display: flex; 
+            align-items: flex-end; 
+            position: relative; 
+            cursor: pointer; 
+            transition: background-color 0.3s;
         }
 
-        /* บังคับ Base อยู่คอลัมน์ที่ 1 ชิดขอบซ้ายเสมอ */
-        .color-box[data-type="base"] {
-            grid-column: 1;
+        /* ล็อก Base Color ไว้ช่องที่ 1 เสมอ */
+        .color-box[data-type="base"] { 
+            grid-column: 1; 
         }
 
         .color-label {
-            width: 100%;
-            text-align: center;
-            background: rgba(0,0,0,0.2);
-            backdrop-filter: blur(10px);
-            color: white;
-            padding: 30px 0;
-            font-family: monospace;
-            font-weight: bold;
-            font-size: 14px;
+            width: 100%; 
+            text-align: center; 
+            background: rgba(0,0,0,0.25); 
+            backdrop-filter: blur(10px); 
+            color: white; 
+            padding: 25px 0 !important; 
+            font-family: monospace; 
+            font-weight: bold; 
+            font-size: 0.9rem;
         }
 
-        /* Sidebar ชิดขวาสุด */
+        /* 4. Sidebar ชิดขวาสุด */
         .sidebar { 
             width: 280px; 
             background: white; 
-            height: 100%;
             padding: 24px !important; 
-            border-left: 1px solid #d1d5db;
-            display: flex;
-            flex-direction: column;
-            gap: 15px !important;
-            z-index: 50;
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px !important; 
+            border-left: 1px solid #d1d5db; 
+            z-index: 50; 
         }
 
-        .login-btn {
-            background: #2563eb;
-            color: white;
-            padding: 8px 16px !important;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
+        .type-btn { @apply w-full py-3 rounded-lg font-bold text-white transition-all opacity-40; }
+        .btn-active { @apply opacity-100 ring-4 ring-slate-100; }
+        
+        /* ปุ่ม Login ชิดมุม Navbar */
+        .login-link { 
+            @apply bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-bold text-sm transition; 
+            padding: 8px 20px !important;
         }
     </style>
 </head>
@@ -108,62 +109,102 @@
         <span class="text-2xl">🎨</span>
         <span class="font-bold tracking-tight uppercase">Color Matcher</span>
     </div>
-    <a href="/login" class="login-btn text-white no-underline">LOGIN</a>
+    <a href="/login" class="login-link">LOGIN</a>
 </div>
 
-<div class="main-layout">
+<div class="main-container">
     <div id="colorDisplay"></div>
 
     <div class="sidebar">
-        <label class="text-[10px] font-bold text-gray-400 uppercase">Base Color Picker</label>
-        <input type="color" id="baseColor" value="#66d7d1" class="w-full h-16 rounded-xl cursor-pointer border-2 border-gray-100 p-1 mb-4">
-        
-        <div class="flex flex-col gap-2">
-            <button onclick="toggle('analogous', this)" class="w-full py-3 bg-blue-500 text-white rounded-lg font-bold opacity-40">ANALOGOUS</button>
-            <button onclick="toggle('triadic', this)" class="w-full py-3 bg-indigo-500 text-white rounded-lg font-bold opacity-40">TRIADIC</button>
-            <button onclick="toggle('tints', this)" class="w-full py-3 bg-pink-500 text-white rounded-lg font-bold opacity-40">TINTS</button>
-            <button onclick="toggle('shades', this)" class="w-full py-3 bg-rose-500 text-white rounded-lg font-bold opacity-40">SHADES</button>
+        <div class="mb-4">
+            <label class="text-[10px] font-bold text-gray-400 uppercase">Base Color</label>
+            <input type="color" id="baseColor" value="#66d7d1" class="w-full h-14 rounded-xl cursor-pointer border-2 border-gray-100 p-1 mt-1">
+        </div>
+        <hr class="border-gray-100 my-2">
+        <div class="flex flex-col gap-2" id="controls">
+            <button class="type-btn bg-emerald-500 btn-active" data-type="base">Base</button>
+            <button class="type-btn bg-blue-500" data-type="analogous">Analogous</button>
+            <button class="type-btn bg-indigo-500" data-type="triadic">Triadic</button>
+            <button class="type-btn bg-purple-500" data-type="split">Split-Comp</button>
+            <button class="type-btn bg-pink-500" data-type="tints">Tints</button>
+            <button class="type-btn bg-rose-500" data-type="shades">Shades</button>
         </div>
     </div>
 </div>
 
 <script>
-    // Logic การคำนวณสีเพื่อให้สีนิ่ง
-    let active = { analogous: false, triadic: false, tints: false, shades: false };
+    /* Color Math */
+    const hexToRgb = h => { const n = parseInt(h.replace("#",""),16); return { r:(n>>16)&255, g:(n>>8)&255, b:n&255 }; }
+    const rgbToHex = (r,g,b) => "#"+[r,g,b].map(c=>c.toString(16).padStart(2,"0")).join("").toUpperCase();
+    const rgbToHsl = (r,g,b) => {
+        r/=255; g/=255; b/=255; let max=Math.max(r,g,b), min=Math.min(r,g,b), h=0, s=0, l=(max+min)/2;
+        if(max!==min){ let d=max-min; s=l>0.5?d/(2-max-min):d/(max+min); if(max===r)h=(g-b)/d+(g<b?6:0); else if(max===g)h=(b-r)/d+2; else h=(r-g)/d+4; h*=60; }
+        return {h, s:s*100, l:l*100};
+    }
+    const hslToHex = (h,s,l) => {
+        s/=100; l/=100; const k=n=>(n+h/30)%12, a=s*Math.min(l,1-l), f=n=>l-a*Math.max(-1,Math.min(k(n)-3,Math.min(9-k(n),1)));
+        return rgbToHex(Math.round(f(0)*255), Math.round(f(8)*255), Math.round(f(4)*255));
+    }
 
-    function render() {
+    let activeTypes = { base: true, analogous: false, triadic: false, split: false, tints: false, shades: false };
+
+    function renderAll() {
         const display = document.getElementById("colorDisplay");
-        const base = document.getElementById("baseColor").value;
+        const picker = document.getElementById("baseColor");
+        const baseHex = picker.value.toUpperCase();
+        
+        localStorage.setItem('savedBaseColor', baseHex);
+
+        const {h,s,l} = rgbToHsl(hexToRgb(baseHex).r, hexToRgb(baseHex).g, hexToRgb(baseHex).b);
+        const clamp = v => ((v % 360) + 360) % 360;
+
+        const colors = {
+            base: [baseHex],
+            analogous: [hslToHex(clamp(h+30),s,l), hslToHex(clamp(h-30),s,l)],
+            triadic: [hslToHex(clamp(h+120),s,l), hslToHex(clamp(h-120),s,l)],
+            split: [hslToHex(clamp(h+150),s,l), hslToHex(clamp(h-150),s,l)],
+            tints: [hslToHex(h,s,Math.min(l+15,100)), hslToHex(h,s,Math.min(l+30,100))],
+            shades: [hslToHex(h,s,Math.max(l-15,0)), hslToHex(h,s,Math.max(l-30,0))]
+        };
+
         display.innerHTML = "";
-
-        // วาด Base ช่องแรกเสมอ (ชิดมุมซ้าย)
-        addBox(base, 'base');
-
-        // แสดงสีอื่นๆ ตามการกดปุ่ม (จะเรียงต่อจาก Base ทันที)
-        if(active.analogous) { addBox('#3b82f6', 'an'); addBox('#60a5fa', 'an'); }
-        if(active.triadic) { addBox('#8b5cf6', 'tr'); addBox('#ec4899', 'tr'); }
-        // ... (ใส่ logic สีอื่นๆ ของคุณได้ที่นี่)
+        
+        // 1. วาด Base ก่อนเสมอ (ล็อก Grid คอลัมน์ที่ 1)
+        if(activeTypes.base) createBox(colors.base[0], 'base', display);
+        
+        // 2. วาดสีอื่นๆ ต่อท้าย
+        Object.keys(activeTypes).forEach(type => {
+            if(type !== 'base' && activeTypes[type]) colors[type].forEach(c => createBox(c, type, display));
+        });
     }
 
-    function addBox(color, type) {
-        const div = document.createElement("div");
-        div.className = "color-box";
-        div.dataset.type = type;
-        div.style.backgroundColor = color;
-        div.innerHTML = `<div class="color-label">${color.toUpperCase()}</div>`;
-        div.onclick = () => { navigator.clipboard.writeText(color); alert("Copied!"); };
-        document.getElementById("colorDisplay").appendChild(div);
+    function createBox(color, type, container) {
+        const box = document.createElement("div");
+        box.className = "color-box"; box.dataset.type = type; box.style.background = color;
+        box.innerHTML = `<div class="color-label">${color}</div>`;
+        box.onclick = () => { 
+            navigator.clipboard.writeText(color); 
+            const original = box.querySelector('.color-label').innerText;
+            box.querySelector('.color-label').innerText = "COPIED!";
+            setTimeout(() => { box.querySelector('.color-label').innerText = original; }, 800);
+        };
+        container.appendChild(box);
     }
 
-    function toggle(type, btn) {
-        active[type] = !active[type];
-        btn.style.opacity = active[type] ? "1" : "0.4";
-        render();
-    }
+    const picker = document.getElementById("baseColor");
+    const saved = localStorage.getItem('savedBaseColor');
+    if(saved) picker.value = saved;
 
-    document.getElementById("baseColor").oninput = render;
-    render(); // Initial Render
+    picker.oninput = renderAll;
+    document.querySelectorAll(".type-btn").forEach(btn => {
+        btn.onclick = () => {
+            activeTypes[btn.dataset.type] = !activeTypes[btn.dataset.type];
+            btn.classList.toggle("btn-active");
+            renderAll();
+        };
+    });
+
+    renderAll();
 </script>
-
 </body>
 </html>
