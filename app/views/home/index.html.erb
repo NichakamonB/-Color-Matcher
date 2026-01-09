@@ -3,244 +3,217 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Color Matcher - Fit to Screen</title>
+<title>Color Matcher - Full Screen</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
   html, body { 
-    margin: 0; 
-    padding: 0; 
-    height: 100vh; 
-    width: 100vw; 
-    font-family: sans-serif; 
-    overflow: hidden; /* ล็อคหน้าจอไม่ให้เลื่อนไปมา */
+    margin: 0; padding: 0; 
+    height: 100vh; width: 100vw; 
+    overflow: hidden; 
+    font-family: 'Inter', sans-serif;
   }
-  *, *::before, *::after { box-sizing: border-box; }
 
   /* Navbar */
   .navbar { 
-    height: 56px; 
+    height: 60px; 
     width: 100%; 
     position: fixed; 
     top: 0; left: 0; 
     display: flex; 
     justify-content: space-between; 
     align-items: center; 
-    padding: 0 20px; 
-    background: #1f2937; 
+    padding: 0 24px; 
+    background: #111827; 
     color: white; 
-    z-index: 50; 
+    z-index: 100; 
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
   }
 
-  /* Main Layout */
+  /* Main Container */
   .main { 
     display: flex; 
     height: 100vh; 
-    padding-top: 56px; /* หักลบพื้นที่ Navbar */
-    background: #f3f4f6;
+    padding-top: 60px;
+    background: #0f172a; /* พื้นหลังสีเข้มเพื่อให้สีโดดเด่น */
   }
 
-  /* Area แสดงสี (กรอบสีเทาทางซ้าย) */
+  /* กรอบสีเทา (พื้นที่แสดงสี) - ตั้งค่าให้เต็มหน้าจอ */
   #colorDisplay { 
-    flex-grow: 1; /* กินพื้นที่ที่เหลือทั้งหมด */
+    flex-grow: 1;
     display: grid;
-    /* ปรับให้ช่องสีขยายพอดีพื้นที่ */
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    grid-auto-rows: 1fr; 
-    gap: 16px; 
-    padding: 20px; 
-    overflow-y: auto; /* เลื่อนได้เฉพาะในส่วนนี้ถ้าช่องสีเยอะเกิน */
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-auto-rows: 1fr; /* บังคับให้ช่องสีสูงเท่ากันจนเต็มหน้าจอ */
+    gap: 0; /* เอา Gap ออกเพื่อให้สีติดกันแบบเต็มตา หรือใส่เป็น 2px ถ้าต้องการเส้นคั่น */
+    padding: 0; 
+    overflow-y: auto;
   }
 
-  /* Sidebar (แถบเมนูขาวทางขวา) */
+  /* Sidebar - ปรับให้เล็กลงและดูทันสมัย */
   .sidebar {
-    width: 320px; /* ปรับขนาดให้กว้างพอดีกับปุ่ม */
+    width: 260px; 
     flex-shrink: 0;
-    background: white;
-    padding: 24px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    border-left: 1px solid #d1d5db;
+    gap: 12px;
+    border-left: 1px solid rgba(0,0,0,0.1);
+    z-index: 80;
     overflow-y: auto;
-    box-shadow: -2px 0 10px rgba(0,0,0,0.05);
   }
 
   .sidebar-btn {
-    @apply w-full py-3 rounded-xl font-semibold cursor-pointer transition text-white shadow-sm;
+    @apply w-full py-3 rounded-lg font-bold cursor-pointer transition-all duration-200 text-white shadow-md;
     border: none;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
   }
-  .sidebar-btn:hover { opacity: 0.9; transform: translateY(-1px); }
-  .sidebar-btn:active { transform: translateY(0); }
-  .btn-active { ring: 3px solid #374151; ring-offset: 2px; }
+  .sidebar-btn:hover { filter: brightness(1.1); transform: scale(1.02); }
+  .btn-active { ring: 4px solid rgba(0,0,0,0.1); filter: saturate(1.5); }
 
-  /* Color Box Styling */
+  /* Color Box */
   .color-box {
     height: 100%; 
-    border-radius: 16px;
     display: flex; 
-    align-items: flex-end; 
+    align-items: center; 
+    justify-content: center;
     position: relative;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
   }
-  .color-box:hover { transform: scale(1.02); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+  .color-box:hover { z-index: 10; transform: scale(1.05); box-shadow: 0 0 30px rgba(0,0,0,0.3); }
   
   .color-label {
-    width: 100%; 
-    text-align: center; 
-    background: rgba(0,0,0,0.2); 
-    backdrop-filter: blur(8px);
+    opacity: 0; /* ซ่อน Code สีไว้ก่อน จะโชว์เมื่อ Hover */
+    background: rgba(0,0,0,0.6);
     color: white;
-    font-weight: bold;
+    padding: 8px 16px;
+    border-radius: 20px;
     font-family: monospace;
-    padding: 12px;
-    border-bottom-left-radius: 16px; 
-    border-bottom-right-radius: 16px;
+    transition: opacity 0.3s;
   }
-
-  /* ปรับแต่ง Scrollbar ให้ดูสะอาดตา */
-  #colorDisplay::-webkit-scrollbar, .sidebar::-webkit-scrollbar {
-    width: 6px;
-  }
-  #colorDisplay::-webkit-scrollbar-thumb, .sidebar::-webkit-scrollbar-thumb {
-    background: #d1d5db;
-    border-radius: 10px;
-  }
+  .color-box:hover .color-label { opacity: 1; }
 
   /* Responsive สำหรับมือถือ */
   @media (max-width: 768px) {
-    .main { flex-direction: column; overflow-y: auto; }
-    #colorDisplay { height: 50vh; flex-shrink: 0; }
-    .sidebar { width: 100%; height: auto; border-left: none; border-top: 1px solid #d1d5db; }
+    .main { flex-direction: column-reverse; } /* เอา Sidebar ไว้ล่างในมือถือ */
+    .sidebar { width: 100%; height: auto; padding: 10px; flex-direction: row; flex-wrap: wrap; }
+    .sidebar-btn { width: 30%; flex-grow: 1; padding: 8px; font-size: 0.7rem; }
+    #colorDisplay { height: 70vh; }
   }
 </style>
 </head>
 <body>
 
 <div class="navbar">
-  <div class="flex items-center gap-2">
-    <span class="text-2xl">🎨</span>
-    <span class="text-lg font-bold tracking-wide">Color Matcher</span>
+  <div class="flex items-center gap-3">
+    <span class="text-3xl">🎨</span>
+    <span class="text-xl font-black tracking-tighter uppercase">Color Canvas</span>
   </div>
-  <a href="#" class="bg-blue-600 px-4 py-2 rounded-lg font-bold text-sm hover:bg-blue-700 transition">ลงชื่อเข้าใช้</a>
+  <button class="bg-white text-black px-5 py-2 rounded-full font-bold text-xs hover:bg-gray-200 transition">LOGIN</button>
 </div>
 
 <div class="main">
   <div id="colorDisplay"></div>
 
   <div class="sidebar">
-    <div class="w-full">
-      <div class="flex justify-between items-end mb-2">
-        <label class="font-bold text-gray-700">Base Color</label>
-        <div id="hexText" class="font-mono font-bold text-blue-600"></div>
-      </div>
-      <input type="color" id="baseColor" value="#66d7d1" class="w-full h-14 rounded-xl cursor-pointer border-2 border-gray-100 p-1 bg-white shadow-inner">
+    <div class="mb-4">
+      <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Primary Selector</p>
+      <input type="color" id="baseColor" value="#66d7d1" class="w-full h-16 rounded-xl cursor-pointer border-none p-1 bg-transparent">
+      <div id="hexText" class="text-center font-black text-xl mt-2 text-gray-800"></div>
     </div>
     
-    <hr class="border-gray-100 my-2">
-    
-    <div class="flex flex-col gap-3">
-      <button class="sidebar-btn bg-slate-800 type-btn btn-active" data-type="base">Base Color</button>
-      <button class="sidebar-btn bg-blue-500 type-btn" data-type="analogous">Analogous</button>
-      <button class="sidebar-btn bg-indigo-500 type-btn" data-type="triadic">Triadic</button>
-      <button class="sidebar-btn bg-purple-500 type-btn" data-type="split">Split-Complementary</button>
-      <button class="sidebar-btn bg-pink-500 type-btn" data-type="tints">Tints</button>
-      <button class="sidebar-btn bg-rose-500 type-btn" data-type="shades">Shades</button>
+    <div class="flex flex-col gap-2">
+      <button class="sidebar-btn bg-black type-btn btn-active" data-type="base">Base</button>
+      <button class="sidebar-btn bg-blue-600 type-btn" data-type="analogous">Analogous</button>
+      <button class="sidebar-btn bg-indigo-600 type-btn" data-type="triadic">Triadic</button>
+      <button class="sidebar-btn bg-purple-600 type-btn" data-type="split">Split-Comp</button>
+      <button class="sidebar-btn bg-pink-600 type-btn" data-type="tints">Tints</button>
+      <button class="sidebar-btn bg-rose-600 type-btn" data-type="shades">Shades</button>
     </div>
   </div>
 </div>
 
 <script>
-/* --- Color Logic --- */
-function hexToRgb(hex){
-  const n = parseInt(hex.replace("#",""),16);
+/* --- Logic เดียวกับตัวก่อนหน้าแต่เพิ่มความสมูทในการแสดงผล --- */
+const hexToRgb = h => {
+  const n = parseInt(h.replace("#",""),16);
   return { r:(n>>16)&255, g:(n>>8)&255, b:n&255 };
 }
-function rgbToHex(r,g,b){
-  return "#"+[r,g,b].map(c=>c.toString(16).padStart(2,"0")).join("").toUpperCase();
-}
-function rgbToHsl(r,g,b){
+const rgbToHex = (r,g,b) => "#"+[r,g,b].map(c=>c.toString(16).padStart(2,"0")).join("").toUpperCase();
+const rgbToHsl = (r,g,b) => {
   r/=255; g/=255; b/=255;
-  let max=Math.max(r,g,b), min=Math.min(r,g,b);
-  let h=0, s=0, l=(max+min)/2;
+  let max=Math.max(r,g,b), min=Math.min(r,g,b), h=0, s=0, l=(max+min)/2;
   if(max!==min){
     let d=max-min;
     s=l>0.5 ? d/(2-max-min) : d/(max+min);
-    switch(max){
-      case r: h=(g-b)/d + (g<b?6:0); break;
-      case g: h=(b-r)/d +2; break;
-      case b: h=(r-g)/d +4; break;
-    }
+    if(max===r) h=(g-b)/d + (g<b?6:0);
+    else if(max===g) h=(b-r)/d +2;
+    else h=(r-g)/d +4;
     h*=60;
   }
   return {h, s:s*100, l:l*100};
 }
-function hslToHex(h,s,l){
+const hslToHex = (h,s,l) => {
   s/=100; l/=100;
-  const k=n=>(n + h/30) % 12;
-  const a = s * Math.min(l, 1-l);
-  const f=n => l - a * Math.max(-1, Math.min(k(n)-3, Math.min(9-k(n),1)));
+  const k=n=>(n + h/30) % 12, a = s * Math.min(l, 1-l), f=n => l - a * Math.max(-1, Math.min(k(n)-3, Math.min(9-k(n),1)));
   return rgbToHex(Math.round(f(0)*255), Math.round(f(8)*255), Math.round(f(4)*255));
 }
-function clampHue(h){ return ((h % 360) + 360) % 360; }
 
 function generateColors(hex){
-  const {r,g,b}=hexToRgb(hex);
-  const {h,s,l}=rgbToHsl(r,g,b);
+  const {r,g,b}=hexToRgb(hex), {h,s,l}=rgbToHsl(r,g,b);
+  const clamp = v => ((v % 360) + 360) % 360;
   return {
     base: [hex],
-    analogous: [hslToHex(clampHue(h+30),s,l), hslToHex(clampHue(h-30),s,l)],
-    triadic: [hslToHex(clampHue(h+120),s,l), hslToHex(clampHue(h-120),s,l)],
-    split: [hslToHex(clampHue(h+150),s,l), hslToHex(clampHue(h-150),s,l)],
+    analogous: [hslToHex(clamp(h+30),s,l), hslToHex(clamp(h-30),s,l)],
+    triadic: [hslToHex(clamp(h+120),s,l), hslToHex(clamp(h-120),s,l)],
+    split: [hslToHex(clamp(h+150),s,l), hslToHex(clamp(h-150),s,l)],
     tints: [hslToHex(h,s,Math.min(l+15,100)), hslToHex(h,s,Math.min(l+30,100))],
     shades: [hslToHex(h,s,Math.max(l-15,0)), hslToHex(h,s,Math.max(l-30,0))]
   };
 }
 
-/* --- Render Logic --- */
 let currentColors = generateColors("#66d7d1");
 let activeTypes = { base: true, analogous: false, triadic: false, split: false, tints: false, shades: false };
 
 function renderAll(){
   const display = document.getElementById("colorDisplay");
   display.innerHTML = "";
-  for(let type in activeTypes){
+  Object.keys(activeTypes).forEach(type => {
     if(activeTypes[type]){
-      currentColors[type].forEach(c=>{
+      currentColors[type].forEach(c => {
         const box = document.createElement("div");
         box.className = "color-box";
-        box.style.background = c;
+        box.style.backgroundColor = c;
         box.innerHTML = `<div class="color-label">${c}</div>`;
         box.onclick = () => {
           navigator.clipboard.writeText(c);
-          const originalText = box.querySelector('.color-label').innerText;
           box.querySelector('.color-label').innerText = "COPIED!";
-          setTimeout(() => { box.querySelector('.color-label').innerText = originalText; }, 800);
+          setTimeout(() => { box.querySelector('.color-label').innerText = c; }, 1000);
         };
         display.appendChild(box);
       });
     }
-  }
+  });
 }
 
 const picker = document.getElementById("baseColor");
-picker.addEventListener("input", ()=>{
+picker.oninput = () => {
   currentColors = generateColors(picker.value);
   document.getElementById("hexText").textContent = picker.value.toUpperCase();
   renderAll();
-});
+};
 
-document.querySelectorAll(".type-btn").forEach(btn=>{
-  btn.addEventListener("click", ()=>{
-    const type = btn.dataset.type;
-    activeTypes[type] = !activeTypes[type];
+document.querySelectorAll(".type-btn").forEach(btn => {
+  btn.onclick = () => {
+    activeTypes[btn.dataset.type] = !activeTypes[btn.dataset.type];
     btn.classList.toggle("btn-active");
     renderAll();
-  });
+  };
 });
 
-// Initial Load
 document.getElementById("hexText").textContent = picker.value.toUpperCase();
 renderAll();
 </script>
