@@ -41,16 +41,14 @@
 
   /* Area แสดงสี */
   #colorDisplay { 
-    flex-grow: 1; /* กินพื้นที่ที่เหลือทั้งหมด */
+    flex-grow: 1;
     display: grid;
-    /* Grid แบบ Auto-fit: ปรับจำนวนคอลัมน์ตามความกว้างหน้าจออัตโนมัติ */
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    align-content: flex-start; /* ให้สีเริ่มเรียงจากบนลงล่าง ไม่กระจาย */
-    gap: 12px; 
+   grid-auto-rows: minmax(180px, 1fr); 
+   gap: 12px; 
     padding: 16px; 
-    overflow-y: auto; /* Scroll เฉพาะตรงนี้ */
+    overflow-y: auto; 
   }
-
   /* Sidebar เมนู */
   .sidebar {
     width: 280px;
@@ -88,9 +86,10 @@
   }
   /* ==================================================== */
 
-  /* Color Box Styles */
   .color-box {
-    height: 180px;
+    /* height: 180px;  <-- ลบบรรทัดนี้ออกครับ ไม่งั้นมันจะล็อคความสูง */
+    height: 100%;   /* <-- เพิ่มอันนี้แทน */
+    
     border-radius: 12px;
     display: flex; 
     align-items: flex-end; 
