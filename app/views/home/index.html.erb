@@ -3,140 +3,225 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Color Fixed Full Screen</title>
+<title>Color Matcher Fixed</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-  :root { --navbar-height: 60px; }
-  
-  /* ล้างค่าขอบทั้งหมด */
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  
-  body { 
-    height: 100vh; 
-    width: 100vw; 
+  /* ลบขอบขาวรอบตัวเว็บเพื่อให้ชิดมุมสุด */
+  html, body { 
+    margin:0; padding:0; 
+    height:100%; width:100%; 
+    font-family:sans-serif; 
     overflow: hidden; 
-    font-family: sans-serif; 
-    background-color: #f1f5f9;
   }
+  *, *::before, *::after { box-sizing:border-box; }
 
-  /* Navbar ชิดขอบบนและซ้ายสุด */
+  /* Navbar ชิดขอบบน */
   .navbar { 
-    height: var(--navbar-height); 
-    background: #0f172a; 
-    color: white; 
-    display: flex; 
-    align-items: center; 
-    padding: 0 24px; 
-    position: fixed; 
-    top: 0;
-    left: 0;
-    width: 100%; 
-    z-index: 100; 
+    height:56px; 
+    width:100%; 
+    position:fixed; 
+    top:0; left:0; 
+    display:flex; 
+    justify-content:space-between; 
+    align-items:center; 
+    padding:0 24px; 
+    background:#1f2937; 
+    color:white; 
+    z-index:50; 
   }
 
+  /* Layout Container */
   .main { 
-    display: flex; 
-    height: 100vh; 
-    width: 100%;
-    padding-top: var(--navbar-height); 
+    display:flex; 
+    height:100vh; 
+    padding-top:56px; 
+    background: #f3f4f6;
   }
 
-  /* จอสีชิดซ้ายสุด */
+  /* Area แสดงสี: เปลี่ยนเป็น Grid แบบล็อกคอลัมน์เพื่อไม่ให้เคลื่อน */
   #colorDisplay { 
-    flex-grow: 1; 
+    flex-grow: 1;
     display: grid;
+    /* จองที่ไว้ 10 ช่อง ช่องละเท่าๆ กันเพื่อให้ Base อยู่ที่เดิมเสมอ */
     grid-template-columns: repeat(10, 1fr); 
-    height: 100%;
-  }
-
-  .color-box {
-    height: 100%;
-    display: flex;
-    align-items: flex-end;
-    cursor: pointer;
-  }
-
-  .color-box[data-type="base"] { grid-column: 1; }
-
-  .color-label {
-    width: 100%;
-    text-align: center;
-    background: rgba(0,0,0,0.2);
-    color: white;
-    padding: 20px 5px;
-    font-size: 14px;
-    font-weight: bold;
+    padding: 0; /* เอา Padding ออกเพื่อให้สีชิดขอบจอ */
+    gap: 0;    /* เอาช่องว่างออกเพื่อให้แถบสีต่อกันสนิท */
   }
 
   /* Sidebar ชิดขวาสุด */
-  .sidebar { 
-    width: 300px; 
-    background: white; 
-    padding: 20px; 
-    border-left: 1px solid #e2e8f0;
+  .sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    background: white;
+    padding: 24px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
+    border-left: 1px solid #d1d5db;
+    z-index: 40;
+  }
+
+  .sidebar-btn {
+    @apply w-full py-3 rounded-lg font-semibold cursor-pointer transition text-white;
+  }
+  .btn-active { @apply ring-4 ring-slate-200; filter: brightness(0.8); }
+
+  /* Color Box: ให้เต็มความสูงและไม่มีขอบมนเพื่อให้ชิดมุม */
+  .color-box {
+    height: 100%; 
+    display: flex; 
+    align-items: flex-end; 
+    justify-content: center;
+    position: relative;
+    transition: flex 0.3s;
+  }
+  
+  /* ล็อก Base Color ให้อยู่ Column ที่ 1 เสมอ */
+  .color-box[data-type="base"] {
+    grid-column: 1;
+  }
+
+  .color-label {
+    width: 100%; 
+    text-align: center; 
+    background: rgba(0,0,0,0.2); 
+    backdrop-filter: blur(8px);
+    color: white;
+    font-weight: bold;
+    font-family: monospace;
+    padding: 20px 5px;
+  }
+
+  @media (max-width: 768px) {
+    .main { flex-direction: column; }
+    #colorDisplay { grid-template-columns: repeat(5, 1fr); height: 60%; }
+    .sidebar { width: 100%; height: 40%; border-left: none; border-top: 1px solid #ddd; }
   }
 </style>
 </head>
 <body>
 
 <div class="navbar">
-  <span class="text-xl mr-3">🎨</span>
-  <span class="font-bold tracking-tight">COLOR FIXED (GRID SYSTEM)</span>
+  <div class="flex items-center gap-2">
+    <span class="text-2xl">🎨</span>
+    <span class="text-lg font-bold tracking-wide uppercase">Color Fixed</span>
+  </div>
+  <button class="bg-blue-600 px-4 py-2 rounded-lg font-bold text-sm hover:bg-blue-700 transition">LOGIN</button>
 </div>
 
 <div class="main">
   <div id="colorDisplay"></div>
 
   <div class="sidebar">
-    <label class="text-xs font-bold text-gray-400 uppercase">Base Color Picker</label>
-    <input type="color" id="basePicker" value="#66d7d1" class="w-full h-16 rounded-lg cursor-pointer">
-    
-    <div id="controls" class="flex flex-col gap-2 mt-4">
-      <button class="btn active bg-slate-800 text-white p-3 rounded-lg text-xs font-bold" onclick="toggleScheme('analogous', this)">ANALOGOUS</button>
-      <button class="btn bg-gray-100 p-3 rounded-lg text-xs font-bold" onclick="toggleScheme('triadic', this)">TRIADIC</button>
-      <button class="btn bg-gray-100 p-3 rounded-lg text-xs font-bold" onclick="toggleScheme('tints', this)">TINTS</button>
+    <div class="mb-2">
+      <div class="flex justify-between items-end mb-1">
+        <label class="font-bold text-gray-500 text-xs uppercase">Base Color</label>
+        <div id="hexText" class="font-mono font-bold text-blue-600"></div>
+      </div>
+      <input type="color" id="baseColor" value="#66d7d1" class="w-full h-14 rounded-xl cursor-pointer bg-white border-2 border-slate-100 p-1">
     </div>
+    
+    <hr class="border-gray-100 my-2">
+    
+    <button class="sidebar-btn bg-emerald-500 type-btn btn-active" data-type="base">Base</button>
+    <button class="sidebar-btn bg-blue-500 type-btn" data-type="analogous">Analogous</button>
+    <button class="sidebar-btn bg-indigo-500 type-btn" data-type="triadic">Triadic</button>
+    <button class="sidebar-btn bg-purple-500 type-btn" data-type="split">Split-Comp</button>
+    <button class="sidebar-btn bg-pink-500 type-btn" data-type="tints">Tints</button>
+    <button class="sidebar-btn bg-rose-500 type-btn" data-type="shades">Shades</button>
   </div>
 </div>
 
 <script>
-// Logic เดียวกับ GRID SYSTEM ที่ส่งให้ก่อนหน้า 
-// แต่มีการปรับปรุงฟังก์ชัน Render ให้สะอาดขึ้นเพื่อให้ชิดขอบเสมอ
-const picker = document.getElementById("basePicker");
-let activeSchemes = { analogous: false, triadic: false, tints: false };
+/* Color Logic (Helper Functions เหมือนเดิม) */
+const hexToRgb = h => {
+  const n = parseInt(h.replace("#",""),16);
+  return { r:(n>>16)&255, g:(n>>8)&255, b:n&255 };
+}
+const rgbToHex = (r,g,b) => "#"+[r,g,b].map(c=>c.toString(16).padStart(2,"0")).join("").toUpperCase();
+const rgbToHsl = (r,g,b) => {
+  r/=255; g/=255; b/=255;
+  let max=Math.max(r,g,b), min=Math.min(r,g,b), h=0, s=0, l=(max+min)/2;
+  if(max!==min){
+    let d=max-min;
+    s=l>0.5 ? d/(2-max-min) : d/(max+min);
+    if(max===r) h=(g-b)/d + (g<b?6:0);
+    else if(max===g) h=(b-r)/d +2;
+    else h=(r-g)/d +4;
+    h*=60;
+  }
+  return {h, s:s*100, l:l*100};
+}
+const hslToHex = (h,s,l) => {
+  s/=100; l/=100;
+  const k=n=>(n + h/30) % 12, a = s * Math.min(l, 1-l), f=n => l - a * Math.max(-1, Math.min(k(n)-3, Math.min(9-k(n),1)));
+  return rgbToHex(Math.round(f(0)*255), Math.round(f(8)*255), Math.round(f(4)*255));
+}
 
-function render() {
+function generateColors(hex){
+  const {r,g,b}=hexToRgb(hex), {h,s,l}=rgbToHsl(r,g,b);
+  const clamp = v => ((v % 360) + 360) % 360;
+  return {
+    base: [hex],
+    analogous: [hslToHex(clamp(h+30),s,l), hslToHex(clamp(h-30),s,l)],
+    triadic: [hslToHex(clamp(h+120),s,l), hslToHex(clamp(h-120),s,l)],
+    split: [hslToHex(clamp(h+150),s,l), hslToHex(clamp(h-150),s,l)],
+    tints: [hslToHex(h,s,Math.min(l+15,100)), hslToHex(h,s,Math.min(l+30,100))],
+    shades: [hslToHex(h,s,Math.max(l-15,0)), hslToHex(h,s,Math.max(l-30,0))]
+  };
+}
+
+let activeTypes = { base: true, analogous: false, triadic: false, split: false, tints: false, shades: false };
+
+function renderAll(){
   const display = document.getElementById("colorDisplay");
+  const picker = document.getElementById("baseColor");
+  const colors = generateColors(picker.value);
   display.innerHTML = "";
-  
-  // สร้าง Base Box ก่อนเสมอเพื่อให้ชิดมุมซ้าย (Grid Column 1)
-  addBox(picker.value, 'base');
 
-  // Logic การคำนวณสี (ย่อเพื่อประหยัดพื้นที่)
-  // ... (ใช้ Logic เดิมที่ส่งให้) ...
+  // ล็อกลำดับ: วาด Base ก่อนเสมอ
+  if(activeTypes.base) colors.base.forEach(c => createBox(c, 'base', display));
+
+  // วาดส่วนอื่นๆ ต่อท้าย
+  Object.keys(activeTypes).forEach(type => {
+    if(type !== 'base' && activeTypes[type]){
+      colors[type].forEach(c => createBox(c, type, display));
+    }
+  });
 }
 
-function addBox(color, type) {
-  const div = document.createElement("div");
-  div.className = "color-box";
-  div.dataset.type = type;
-  div.style.backgroundColor = color;
-  div.innerHTML = `<div class="color-label">${color.toUpperCase()}</div>`;
-  document.getElementById("colorDisplay").appendChild(div);
+function createBox(color, type, container) {
+  const box = document.createElement("div");
+  box.className = "color-box";
+  box.dataset.type = type;
+  box.style.background = color;
+  box.innerHTML = `<div class="color-label">${color}</div>`;
+  box.onclick = () => {
+    navigator.clipboard.writeText(color);
+    const label = box.querySelector('.color-label');
+    label.innerText = "COPIED!";
+    setTimeout(() => { label.innerText = color; }, 800);
+  };
+  container.appendChild(box);
 }
 
-function toggleScheme(type, btn) {
-  activeSchemes[type] = !activeSchemes[type];
-  btn.classList.toggle('bg-slate-800');
-  btn.classList.toggle('text-white');
-  render();
-}
+const picker = document.getElementById("baseColor");
+picker.addEventListener("input", () => {
+  document.getElementById("hexText").textContent = picker.value.toUpperCase();
+  renderAll();
+});
 
-picker.oninput = render;
-render();
+document.querySelectorAll(".type-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const type = btn.dataset.type;
+    activeTypes[type] = !activeTypes[type];
+    btn.classList.toggle("btn-active");
+    renderAll();
+  });
+});
+
+document.getElementById("hexText").textContent = picker.value.toUpperCase();
+renderAll();
 </script>
 </body>
 </html>
